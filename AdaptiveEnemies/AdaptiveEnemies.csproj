@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>AdaptiveEnemies</AssemblyName>
+    <RootNamespace>AdaptiveEnemies</RootNamespace>
+    <Deterministic>true</Deterministic>
+    <DebugType>portable</DebugType>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <Version>1.0.0</Version>
+    <!-- Unity/Mono assemblies are not annotated; silence the noise they generate. -->
+    <NoWarn>$(NoWarn);CS0649;CS0169;CS8632</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PluginOutDir>$(BepInExPath)/plugins/AdaptiveEnemies</PluginOutDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="BepInEx">
+      <HintPath>$(BepInExPath)/core/BepInEx.dll</HintPath><Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(BepInExPath)/core/0Harmony.dll</HintPath><Private>false</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(ManagedPath)/Assembly-CSharp.dll</HintPath><Private>false</Private>
+    </Reference>
+    <Reference Include="PlayMaker">
+      <HintPath>$(ManagedPath)/PlayMaker.dll</HintPath><Private>false</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>$(ManagedPath)/Newtonsoft.Json.dll</HintPath><Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(ManagedPath)/UnityEngine.dll</HintPath><Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>$(ManagedPath)/UnityEngine.CoreModule.dll</HintPath><Private>false</Private>
+    </Reference>
+    <Reference Include="Unity.InputSystem">
+      <HintPath>$(ManagedPath)/Unity.InputSystem.dll</HintPath><Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>$(ManagedPath)/UnityEngine.Physics2DModule.dll</HintPath><Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- Drop the built plugin straight into the game's plugin folder. -->
+  <Target Name="DeployToPlugins" AfterTargets="Build" Condition="Exists('$(BepInExPath)')">
+    <MakeDir Directories="$(PluginOutDir)" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(PluginOutDir)" ContinueOnError="false" />
+    <Copy SourceFiles="$(TargetDir)$(AssemblyName).pdb" DestinationFolder="$(PluginOutDir)" Condition="Exists('$(TargetDir)$(AssemblyName).pdb')" />
+    <Message Importance="high" Text="AdaptiveEnemies -> $(PluginOutDir)" />
+  </Target>
+
+</Project>
